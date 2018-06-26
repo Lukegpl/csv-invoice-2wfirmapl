@@ -5,6 +5,6 @@ W katalogu config ustawiamy usera oraz hasło. Dodatkowo w określamy w których
 oraz kod produktu. 
 
 Warunek jest taki, że musi być utworzona faktura w wFirma.pl. Po utworzeniu pustego dokumentu wFirma możemy zuplodować całą listę
-produktów do faktury. Wychodząc oczywiście z założenia, że produkty znajdują się już w katalogu wFirma. 
+produktów do faktury. Wychodząc oczywiście z założenia, że produkty znajdują się już w kartotece wFirma. 
 
 W katalogu public mamy uploader. W katalogu config pliczek settings.ini z ustawiniami oraz src malutkie źródła projektu.
