@@ -32,6 +32,7 @@ require_once(dirname(__FILE__).'/init.php');
   $csvfile = false;
 	$processing_response = array();
 	if(isset($_POST['processfile']) && isset($_SESSION['products_file'])) {
+    $vat = $_POST['vat'];
 		$csvfile = new CsvFile($_SESSION['products_file']);		
     //Wyczyszczenie pliku i przygotowanie danych do zaciągnięcia
     $products = array();
@@ -46,7 +47,7 @@ require_once(dirname(__FILE__).'/init.php');
         }
         $products[] = array('count' => $row[$cfg->col_qty],
                                'price' => str_replace(',','.',str_replace('EUR','',$row[$cfg->col_price])),
-                               'vat' => "{$cfg->vat}",                               
+                               'vat' => "{$vat}",                               
                                'good' => array('id'=>$good['id'])
           );  
                     
@@ -59,6 +60,7 @@ require_once(dirname(__FILE__).'/init.php');
 		unset($_SESSION['products_file']);
     unset($_SESSION['fullnumber']);
     unset($_SESSION['invoice_id']);
+    $csvfile = false;
 	}
 
 	if(isset($_FILES['products_file'])){
@@ -72,7 +74,7 @@ require_once(dirname(__FILE__).'/init.php');
 		$csvfile = new CsvFile($_SESSION['products_file']);	
 	}
 //echo '<pre>';
-//var_dump(count($wfirma_invoice_data))
+//var_dump(count($wfirma_invoice_data));
 //print_r($wfirma_invoice_data);
 
 
@@ -101,8 +103,7 @@ require_once(dirname(__FILE__).'/init.php');
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/font-awesome.min.css">
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.js" integrity="sha256-fNXJFIlca05BIO2Y5zh1xrShK3ME+/lYZ0j+ChxX2DA=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="js/jquery.api.uploader.js">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.js" integrity="sha256-fNXJFIlca05BIO2Y5zh1xrShK3ME+/lYZ0j+ChxX2DA=" crossorigin="anonymous"></script>  
     
 </head>
 <body>
@@ -110,7 +111,7 @@ require_once(dirname(__FILE__).'/init.php');
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
-<?php if(count($wfirma_invoice_data)==0 && !isset($_SESSION['fullnumber'])): ?>
+<?php if(count($wfirma_invoice_data)==0): ?>
     <form enctype="multipart/form-data" method="post">
     <div class="row">
       <div class="twleve columns" style="margin-top:30px;">     
@@ -121,7 +122,7 @@ require_once(dirname(__FILE__).'/init.php');
   <div class="row">
      <div class="one-half column">
         <label for="newprefix">Numer faktury wfirma.pl</label>
-          <input class="u-full-width" name="invoice_id" type="text" placeholder="podaj ID">
+          <input class="u-full-width" name="invoice_id" type="text" placeholder="podaj ID" value="<?php echo isset($_SESSION['fullnumber'])?$_SESSION['fullnumber']:''; ?>">
       </div> 
   </div>   
   <div class="row">
@@ -173,9 +174,15 @@ if(count($processing_response)>0): ?>
 <?php if($csvfile && $csvfile->count()>0 && count($processing_response)==0): ?>
     <div class="row">
     	<form method="post">
-      <div class="twleve columns" style="margin-top:30px;"> 
+      <div class="twleve columns" style="margin-top:30px;">         
       <h4>Aktualziacja faktury z csv do wFirma.pl</h4>    
       <h5>Import pozycji do faktury: <?php echo $_SESSION['fullnumber'] ?></h5>
+      <h6>VAT:
+        <select name="vat">
+          <option>WDT</option>
+          <option>23</option>
+        </select>
+      </h6>
       <h6>Weryfikacja wprowadzonego pliku</h6> 
       <table style="width:100%;">
 
