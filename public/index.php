@@ -27,8 +27,7 @@ require_once(dirname(__FILE__).'/init.php');
 		unset($_SESSION['products_file']);
     unset($_SESSION['fullnumber']);
     unset($_SESSION['invoice_id']);
-	}
-  
+	}  
   $csvfile = false;
 	$processing_response = array();
 	if(isset($_POST['processfile']) && isset($_SESSION['products_file'])) {
@@ -42,7 +41,7 @@ require_once(dirname(__FILE__).'/init.php');
         $good = $wfirma_invoice->findOneProduct($row[$cfg->col_code]);
         //print_r($good);
         if(!isset($good['id'])){
-          $processing_response[] = "Nie znalezionio produktu: <b>".$row[$cfg->col_code]."</b>";
+          $processing_response[] = "Nie znalezionio produktu: <b>".$row[$cfg->col_code]."</b>: ".$row[$cfg->col_name]." : ".$row[$cfg->col_price];
           continue;
         }
         $products[] = array('count' => $row[$cfg->col_qty],
@@ -54,8 +53,19 @@ require_once(dirname(__FILE__).'/init.php');
     }
     
     $ret = $wfirma_invoice->updateProducts($_SESSION['invoice_id'],$products);  
+    //echo "<pre>";
     //print_r($ret);
-    //print_r($wfirma_invoice->get($_SESSION['invoice_id']));
+    // print_r($wfirma_invoice->get($_SESSION['invoice_id']));    
+    if($ret['status']['code']=='ERROR'){
+       //print_r($ret['invoices'][0]);
+        foreach($ret['invoices'][0]['invoice']['invoicecontents'] as $pos){
+
+            if(isset($pos['invoicecontent']['errors'][0])){
+              $processing_response[] =  "Błąd: ".$pos['invoicecontent']['name'].": ".implode(", ",$pos['invoicecontent']['errors'][0]['error']);
+            }
+        }
+        //print_r($processing_response);
+    }
 		unlink($_SESSION['products_file']);
 		unset($_SESSION['products_file']);
     unset($_SESSION['fullnumber']);
