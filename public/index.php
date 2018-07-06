@@ -66,6 +66,9 @@ require_once(dirname(__FILE__).'/init.php');
         }
         //print_r($processing_response);
     }
+    if($ret['status']['code']=='OK'){
+       $processing_response[] = 'Pozycje zostały załadowane pomyślnie :).';
+    }
 		unlink($_SESSION['products_file']);
 		unset($_SESSION['products_file']);
     unset($_SESSION['fullnumber']);
