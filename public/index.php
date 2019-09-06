@@ -36,8 +36,7 @@ require_once(dirname(__FILE__).'/init.php');
     //Wyczyszczenie pliku i przygotowanie danych do zaciągnięcia
     $products = array();
     $i=0; 
-    foreach($csvfile->getRow() as $row){
-      if($i==0){$i++;continue;}
+    foreach($csvfile->getRow() as $row){      
         $good = $wfirma_invoice->findOneProduct($row[$cfg->col_code]);
         //print_r($good);
         if(!isset($good['id'])){

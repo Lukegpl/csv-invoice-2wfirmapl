@@ -42,5 +42,16 @@ class WInvoice extends wFirmaPlApi {
 		}		
 		return false;
 	}
+
+
+	public function getProduct($id_product){			
+		$jsonRequest = array();
+		$good = $this->request($jsonRequest,'goods/get/'.$id_product);				
+		if(isset($good['goods'][0]['good'])){
+			return $good['goods'][0]['good'];
+		}		
+		return false;
+	}
+	
 }
 ?>

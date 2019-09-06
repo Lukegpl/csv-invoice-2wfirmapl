@@ -16,7 +16,7 @@ class CsvFile{
 
 	public function getRow(){
 		foreach($this->data as $key => $value){
-
+			if($key<3) continue;
 			yield $value;
 
 		}
